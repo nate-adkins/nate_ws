@@ -19,11 +19,11 @@ class ScienceScoopControlNode(Node):
 
         self.rotation_speed_rev_per_min = 60    
 
-        # self.u2d2 = U2D2('/dev/ttyUSB0', 1000000)
-        # self.dxl_scoop_1 = Dynamixel(XL430, 1, self.u2d2)
-        # self.dxl_scoop_2 = Dynamixel(XL430, 2, self.u2d2)
-        # self.dxl_scoop_3 = Dynamixel(XL430, 3, self.u2d2)
-        # self.dxls = [self.dxl_scoop_1, self.dxl_scoop_2, self.dxl_scoop_3]
+        self.u2d2 = U2D2('/dev/ttyUSB0', 1000000)
+        self.dxl_scoop_1 = Dynamixel(XL430, 1, self.u2d2)
+        self.dxl_scoop_2 = Dynamixel(XL430, 2, self.u2d2)
+        self.dxl_scoop_3 = Dynamixel(XL430, 3, self.u2d2)
+        self.dxls = [self.dxl_scoop_1, self.dxl_scoop_2, self.dxl_scoop_3]
 
         self.last_spin_start_time = time.time()
         self.spin_time_seconds = 30
