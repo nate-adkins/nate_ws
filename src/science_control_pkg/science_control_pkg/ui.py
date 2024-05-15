@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import rclpy
 from std_msgs.msg import String
+from robot_interfaces.msg import ScienceScoopControls
 
 def start1(node):
     node.publish_message("Start button 1 clicked")
