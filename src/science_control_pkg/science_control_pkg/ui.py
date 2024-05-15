@@ -6,36 +6,45 @@ from robot_interfaces.msg import ScienceScoopControls
 
 def start1(node):
     node.publish_gui_events("Start button 1 clicked")
+    node.publish_scoop_controls(1,True,False,False)
 
 def stop1(node):
     node.publish_gui_events("Stop button 1 clicked")
+    node.publish_scoop_controls(1,False,True,False)
 
 def reset1(node):
     node.publish_gui_events("Reset button 1 clicked")
+    node.publish_scoop_controls(1,False,False,True)
 
 def slider_changed1(node, value):
     node.publish_gui_events("Slider 1 value: {}".format(value))
 
 def start2(node):
     node.publish_gui_events("Start button 2 clicked")
+    node.publish_scoop_controls(2,True,False,False)
 
 def stop2(node):
     node.publish_gui_events("Stop button 2 clicked")
+    node.publish_scoop_controls(2,False,True,False)
 
 def reset2(node):
     node.publish_gui_events("Reset button 2 clicked")
+    node.publish_scoop_controls(2,False,False,True)
 
 def slider_changed2(node, value):
     node.publish_gui_events("Slider 2 value: {}".format(value))
 
 def start3(node):
     node.publish_gui_events("Start button 3 clicked")
+    node.publish_scoop_controls(3,True,False,False)
 
 def stop3(node):
     node.publish_gui_events("Stop button 3 clicked")
+    node.publish_scoop_controls(3,True,False,False)
 
 def reset3(node):
     node.publish_gui_events("Reset button 3 clicked")
+    node.publish_scoop_controls(3,True,False,False)
 
 def slider_changed3(node, value):
     node.publish_gui_events("Slider 3 value: {}".format(value))
@@ -95,7 +104,7 @@ class MainWindow(tk.Tk):
         msg.data = message
         publisher.publish(msg)
 
-    def publish_scoop_controls(self, dynamixel_id, start, stop, reboot):
+    def publish_scoop_controls(self, dynamixel_id: int, start: bool, stop: bool, reboot: bool):
         publisher = self.node.create_publisher(ScienceScoopControls, 'science_scoop_controls', 10)
         msg = ScienceScoopControls()
         msg.start_spin = start

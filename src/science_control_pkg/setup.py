@@ -24,7 +24,11 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            # 'drill_node = science_control_pkg.drill:main',
+            # 'sample_mgmt_node = science_control_pkg.sample_mgmt:main',
+            'scoop_node = science_control_pkg.scoop:main',
             'ui_node = science_control_pkg.ui:main',
+
         ],
     },
 )
