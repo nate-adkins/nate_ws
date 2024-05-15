@@ -5,40 +5,40 @@ from std_msgs.msg import String
 from robot_interfaces.msg import ScienceScoopControls
 
 def start1(node):
-    node.publish_message("Start button 1 clicked")
+    node.publish_gui_events("Start button 1 clicked")
 
 def stop1(node):
-    node.publish_message("Stop button 1 clicked")
+    node.publish_gui_events("Stop button 1 clicked")
 
 def reset1(node):
-    node.publish_message("Reset button 1 clicked")
+    node.publish_gui_events("Reset button 1 clicked")
 
 def slider_changed1(node, value):
-    node.publish_message("Slider 1 value: {}".format(value))
+    node.publish_gui_events("Slider 1 value: {}".format(value))
 
 def start2(node):
-    node.publish_message("Start button 2 clicked")
+    node.publish_gui_events("Start button 2 clicked")
 
 def stop2(node):
-    node.publish_message("Stop button 2 clicked")
+    node.publish_gui_events("Stop button 2 clicked")
 
 def reset2(node):
-    node.publish_message("Reset button 2 clicked")
+    node.publish_gui_events("Reset button 2 clicked")
 
 def slider_changed2(node, value):
-    node.publish_message("Slider 2 value: {}".format(value))
+    node.publish_gui_events("Slider 2 value: {}".format(value))
 
 def start3(node):
-    node.publish_message("Start button 3 clicked")
+    node.publish_gui_events("Start button 3 clicked")
 
 def stop3(node):
-    node.publish_message("Stop button 3 clicked")
+    node.publish_gui_events("Stop button 3 clicked")
 
 def reset3(node):
-    node.publish_message("Reset button 3 clicked")
+    node.publish_gui_events("Reset button 3 clicked")
 
 def slider_changed3(node, value):
-    node.publish_message("Slider 3 value: {}".format(value))
+    node.publish_gui_events("Slider 3 value: {}".format(value))
 
 class SliderWithButtons(tk.Frame):
     def __init__(self, master, start_func, stop_func, reset_func, slider_func, node):
@@ -89,17 +89,29 @@ class MainWindow(tk.Tk):
             node=self
         )
 
-    def publish_message(self, message):
+    def publish_gui_events(self, message):
         publisher = self.node.create_publisher(String, 'gui_output', 10)
         msg = String()
         msg.data = message
+        publisher.publish(msg)
+
+    def publish_scoop_controls(self, dynamixel_id, start, stop, reboot):
+        publisher = self.node.create_publisher(ScienceScoopControls, 'science_scoop_controls', 10)
+        msg = ScienceScoopControls()
+        msg.start_spin = start
+        msg.stop_spin = stop 
+        msg.reboot = reboot
+        msg.dynamixel_id = dynamixel_id
         publisher.publish(msg)
 
     def shutdown(self):
         self.node.destroy_node()
         rclpy.shutdown()
 
-if __name__ == "__main__":
+def main():
     app = MainWindow()
     app.mainloop()
     app.shutdown()
+
+if __name__ == "__main__":
+    main()
