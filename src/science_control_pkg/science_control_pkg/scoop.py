@@ -72,12 +72,12 @@ class ScienceScoopControlNode(Node):
             self.get_logger().warn(f'scoop_control_callback: provided dynamixel id ({msg.dynamixel_id}) is not in use')
             return
         
-        if msg.reboot:
-            self.reboot(curr_dxl)
-
         if msg.start_spin and msg.stop_spin: 
             self.get_logger().warn(f'scoop_control_callback: scoop told to start and stop, defaulting to stop')
             self.stop_spinning(curr_dxl)
+        
+        if msg.reboot:
+            self.reboot(curr_dxl)
 
         elif msg.start_spin:
             self.start_spinning(curr_dxl)

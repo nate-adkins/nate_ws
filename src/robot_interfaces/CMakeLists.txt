@@ -30,6 +30,8 @@ find_package(geometry_msgs REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ScienceScoopControls.msg"
+  "msg/CanCommand.msg"
+  "msg/ScienceDrillControls.msg"
   DEPENDENCIES std_msgs geometry_msgs
 )
 
