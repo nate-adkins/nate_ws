@@ -15,6 +15,8 @@ class ScienceScoopControlNode(Node):
             10
         )
 
+        self.thread_lock = threading.Lock()
+
         self.rotation_speed_rev_per_min = 60    
 
         self.u2d2 = U2D2('/dev/ttyUSB0', 1000000)
@@ -33,22 +35,29 @@ class ScienceScoopControlNode(Node):
     def monitor_inactivity(self):
         while True:
             if (time.time() - self.last_spin_start_time) >= self.spin_time_seconds:
-                for dxl in self.scoops:
-                    self.stop_spinning(dxl)
+                with self.thread_lock:
+                    for dxl in self.dxls:
+                        self.stop_spinning(dxl)
             time.sleep(1)
 
     def reverse_direction(self):
         self.rotation_speed_rev_per_min *= -1
 
+    def reboot(self, dxl: Dynamixel):
+        with self.thread_lock:
+            dxl.reboot(dxl)
+
     def stop_spinning(self, dxl: Dynamixel):
-        dxl.write(XL430.GoalVelocity, 0)
-        dxl.write(XL430.TorqueEnable, 0)
+        with self.thread_lock:
+            dxl.write(XL430.GoalVelocity, 0)
+            dxl.write(XL430.TorqueEnable, 0)
 
     def start_spinning(self, dxl: Dynamixel):
         op_modes = {'velocity' : 1, 'position' : 3}
-        dxl.write(XL430.OperatingMode, op_modes.get('velocity'))
-        dxl.write(XL430.TorqueEnable, 1)
-        dxl.write(XL430.GoalVelocity, self.rotation_speed_rev_per_min)
+        with self.thread_lock:
+            dxl.write(XL430.OperatingMode, op_modes.get('velocity'))
+            dxl.write(XL430.TorqueEnable, 1)
+            dxl.write(XL430.GoalVelocity, self.rotation_speed_rev_per_min)
 
     def scoop_control_callback(self, msg: ScienceScoopControls) -> None:
         self.last_message_time = time.time()
@@ -64,7 +73,7 @@ class ScienceScoopControlNode(Node):
             return
         
         if msg.reboot:
-            curr_dxl.reboot(curr_dxl)
+            self.reboot(curr_dxl)
 
         if msg.start_spin and msg.stop_spin: 
             self.get_logger().warn(f'scoop_control_callback: scoop told to start and stop, defaulting to stop')
